@@ -1,8 +1,10 @@
 # 🇳🇵 Mero Nepali Utils
 
 [![npm version](https://img.shields.io/npm/v/mero-nepali-utils.svg)](https://www.npmjs.com/package/mero-nepali-utils)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm downloads](https://img.shields.io/npm/dm/mero-nepali-utils.svg)](https://www.npmjs.com/package/mero-nepali-utils)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/mero-nepali-utils)](https://bundlephobia.com/package/mero-nepali-utils)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/sakarkhadka10/mero-nepali-utils?style=social)](https://github.com/sakarkhadka10/mero-nepali-utils)
 
 A **lightning-fast**, high-precision toolkit for Nepali applications. Engineered for modern web environments that demand accuracy, speed, and a tiny footprint. Featuring O(log n) date conversion and seamless numeral transformation.
 

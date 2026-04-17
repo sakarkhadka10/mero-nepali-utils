@@ -1,6 +1,6 @@
 {
   "name": "mero-nepali-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight, zero-dependency toolkit for Nepali applications featuring accurate Bikram Sambat (BS) ↔ Gregorian (AD) date conversion and seamless English ↔ Nepali numeral transformation, built for performance and scalability.",
   "type": "module",
   "main": "dist/index.js",
@@ -44,13 +44,13 @@
   "engines": {
     "node": ">=16"
   },
-  "homepage": "https://github.com/sakarkhadka10/npm-mero-nepali-utils",
+  "homepage": "https://github.com/sakarkhadka10/mero-nepali-utils",
   "repository": {
   "type": "git",
-  "url": "https://github.com/sakarkhadka10/npm-mero-nepali-utils"
+  "url": "https://github.com/sakarkhadka10/mero-nepali-utils"
 },
   "bugs": {
-    "url": "https://github.com/sakarkhadka10/npm-mero-nepali-utils/issues"
+    "url": "https://github.com/sakarkhadka10/mero-nepali-utils/issues"
   },
   "devDependencies": {
     "tsup": "^8.5.1",
