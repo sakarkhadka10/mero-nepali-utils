@@ -21,7 +21,7 @@
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "tsup src/index.ts --watch",
     "prepublishOnly": "npm run build",
-    "test":"vitest"
+    "test": "vitest"
   },
   "keywords": [
     "nepali",
