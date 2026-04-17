@@ -128,7 +128,7 @@ This library supports dates from **BS 2000 to BS 2090**. The data is cross-verif
 ## 🔗 Connect & Use Cases
 
 - **Portfolio**: [sakarkhadka.com.np](https://sakarkhadka.com.np)
-- **Production**: Used across [merokarya.com](https://merokarya.com) ecosystem.
+- **Production**: Used across [merokarya.com](https://merokarya.com/date-converter) ecosystem.
 
 ---
 

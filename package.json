@@ -24,20 +24,33 @@
     "test": "vitest"
   },
   "keywords": [
-    "nepali",
-    "date",
-    "bs",
-    "ad",
-    "bikram-sambat"
-  ],
+  "nepali",
+  "bikram sambat",
+  "bs to ad",
+  "ad to bs",
+  "nepali date",
+  "date converter",
+  "devanagari",
+  "nepali numbers",
+  "numeral converter",
+  "nepali utils",
+  "unicode nepali",
+  "transliteration",
+  "nepali typing",
+  "mero karya"
+],
   "author": "Sakar",
   "license": "MIT",
   "engines": {
     "node": ">=16"
   },
-  "homepage": "https://github.com/sakarkhadka10/mero-nepali-date",
+  "homepage": "https://github.com/sakarkhadka10/npm-mero-nepali-utils",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/sakarkhadka10/npm-mero-nepali-utils"
+},
   "bugs": {
-    "url": "https://github.com/sakarkhadka10/mero-nepali-date/issues"
+    "url": "https://github.com/sakarkhadka10/npm-mero-nepali-utils/issues"
   },
   "devDependencies": {
     "tsup": "^8.5.1",
