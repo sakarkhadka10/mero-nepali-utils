@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { meroBs } from "./src/core/package/meroBs";
 import { meroAd } from "./src/core/package/meroAd";
-import { meroNepaliNumber } from "./src/core/package/meroNumber";
+import { meroNumber } from "./src/core/package/meroNumber";
 
 describe("mero-nepali-utils", () => {
   // -------------------------
@@ -62,35 +62,35 @@ describe("mero-nepali-utils", () => {
 
   describe("meroNepaliNumber (EN → NP)", () => {
     it("converts simple numbers", () => {
-      expect(meroNepaliNumber(123)).toBe("१२३");
+      expect(meroNumber(123)).toBe("१२३");
     });
 
     it("converts string numbers", () => {
-      expect(meroNepaliNumber("456")).toBe("४५६");
+      expect(meroNumber("456")).toBe("४५६");
     });
 
     it("handles mixed text", () => {
-      expect(meroNepaliNumber("Price: 789")).toBe("Price: ७८९");
+      expect(meroNumber("Price: 789")).toBe("Price: ७८९");
     });
 
     it("handles decimals", () => {
-      expect(meroNepaliNumber("123.45")).toBe("१२३.४५");
+      expect(meroNumber("123.45")).toBe("१२३.४५");
     });
 
     it("handles commas", () => {
-      expect(meroNepaliNumber("1,234")).toBe("१,२३४");
+      expect(meroNumber("1,234")).toBe("१,२३४");
     });
 
     it("handles special characters", () => {
-      expect(meroNepaliNumber("Rs. 1000/-")).toBe("Rs. १०००/-");
+      expect(meroNumber("Rs. 1000/-")).toBe("Rs. १०००/-");
     });
 
     it("returns same string if no digits", () => {
-      expect(meroNepaliNumber("Hello")).toBe("Hello");
+      expect(meroNumber("Hello")).toBe("Hello");
     });
 
     it("handles empty string", () => {
-      expect(meroNepaliNumber("")).toBe("");
+      expect(meroNumber("")).toBe("");
     });
   });
 });

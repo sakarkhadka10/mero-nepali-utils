@@ -29,40 +29,43 @@ npm install mero-nepali-utils
 ## 📖 Quick Start
 
 ### 1. Date Conversion: `meroBs` (AD to BS)
+
 Perfect for localized UI rendering from database timestamps.
 
 ```typescript
 import { meroBs } from "mero-nepali-utils";
 
 // From Date object
-const today = meroBs(new Date()); 
+const today = meroBs(new Date());
 // "2081-01-05" (example)
 
 // From string
-const specific = meroBs("2024-04-17"); 
+const specific = meroBs("2024-04-17");
 // "2081-01-05"
 ```
 
 ### 2. Date Conversion: `meroAd` (BS to AD)
+
 Ideal for converting user input from Nepali datepickers for database storage.
 
 ```typescript
 import { meroAd } from "mero-nepali-utils";
 
-const dbFormat = meroAd("2081-01-01"); 
+const dbFormat = meroAd("2081-01-01");
 // "2024-04-13"
 ```
 
-### 3. Numeral Localization: `meroNepaliNumber`
+### 3. Numeral Localization: `meroNumber`
+
 Convert prices, IDs, or counts to Devanagari script.
 
 ```typescript
-import { meroNepaliNumber } from "mero-nepali-utils";
+import { meroNumber } from "mero-nepali-utils";
 
-const count = meroNepaliNumber(12345); 
+const count = meroNumber(12345);
 // "१२३४५"
 
-const mixed = meroNepaliNumber("Year: 2081"); 
+const mixed = meroNumber("Year: 2081");
 // "Year: २०८१"
 ```
 
@@ -76,10 +79,10 @@ Senior developers recommend storing dates in **AD format (ISO 8601)** in the dat
 // Localizing a timestamp for a Nepali UI
 const Profile = ({ createdAt }) => {
   const nepaliDate = meroBs(createdAt);
-  
+
   return (
     <div className="user-card">
-      <p>Member since: {meroNepaliNumber(nepaliDate)}</p>
+      <p>Member since: {meroNumber(nepaliDate)}</p>
       {/* Renders: Member since: २०८१-०१-०१ */}
     </div>
   );
@@ -91,15 +94,18 @@ const Profile = ({ createdAt }) => {
 ## 🛠️ API Reference
 
 ### `meroBs(date: string | Date): string`
+
 - **Input**: `Date` object or string (`YYYY-MM-DD`).
 - **Output**: BS date string (`YYYY-MM-DD`).
 - **Optimization**: Binary search based lookup (O(log n)).
 
 ### `meroAd(date: string): string`
+
 - **Input**: BS date string (`YYYY-MM-DD`).
 - **Output**: AD date string (`YYYY-MM-DD`).
 
-### `meroNepaliNumber(input: string | number): string`
+### `meroNumber(input: string | number): string`
+
 - **Input**: Any string or number containing English digits.
 - **Output**: String with digits replaced by Nepali counterparts.
 
