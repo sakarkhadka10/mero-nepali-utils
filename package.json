@@ -1,0 +1,47 @@
+{
+  "name": "mero-nepali-utils",
+  "version": "1.0.0",
+  "description": "A lightweight, zero-dependency toolkit for Nepali applications featuring accurate Bikram Sambat (BS) ↔ Gregorian (AD) date conversion and seamless English ↔ Nepali numeral transformation, built for performance and scalability.",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --watch",
+    "prepublishOnly": "npm run build",
+    "test":"vitest"
+  },
+  "keywords": [
+    "nepali",
+    "date",
+    "bs",
+    "ad",
+    "bikram-sambat"
+  ],
+  "author": "Sakar",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "homepage": "https://github.com/sakarkhadka10/mero-nepali-date",
+  "bugs": {
+    "url": "https://github.com/sakarkhadka10/mero-nepali-date/issues"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.4"
+  }
+}
