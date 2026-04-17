@@ -23,6 +23,14 @@ A **lightning-fast**, high-precision toolkit for Nepali applications. Engineered
 ```bash
 npm install mero-nepali-utils
 ```
+Or
+```bash
+pnpm add mero-nepali-utils
+```
+Or
+```bash
+bun add mero-nepali-utils
+```
 
 ---
 
