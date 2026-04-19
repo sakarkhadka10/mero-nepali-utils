@@ -52,7 +52,7 @@
   "author": "Sakar",
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "homepage": "https://github.com/sakarkhadka10/mero-nepali-utils",
   "repository": {
