@@ -85,7 +85,4 @@ jobs:
          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
          npm install -g gh-pages
-
-         gh-pages -d docs \
-          -u "github-actions[bot] <github-actions[bot]@users.noreply.github.com>" \
-          -r https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+         gh-pages -d docs
