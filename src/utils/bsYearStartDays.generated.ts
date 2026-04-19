@@ -1,4 +1,4 @@
-const rawBsYearStartDays = {
+export const bsYearStartDays = {
   "2000": 0,
   "2001": 365,
   "2002": 730,
@@ -91,10 +91,3 @@ const rawBsYearStartDays = {
   "2089": 32508,
   "2090": 32873
 } as const;
-
-// ✅ type-safe map for runtime usage
-export const bsYearStartDays: Record<number, number> =
-  rawBsYearStartDays as unknown as Record<number, number>;
-
-// ✅ optional: export type for advanced usage
-export type BsYear = keyof typeof rawBsYearStartDays;

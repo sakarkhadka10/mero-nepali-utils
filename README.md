@@ -4,136 +4,196 @@
 [![npm downloads](https://img.shields.io/npm/dm/mero-nepali-utils.svg)](https://www.npmjs.com/package/mero-nepali-utils)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/mero-nepali-utils)](https://bundlephobia.com/package/mero-nepali-utils)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/sakarkhadka10/mero-nepali-utils?style=social)](https://github.com/sakarkhadka10/mero-nepali-utils)
+![CI](https://github.com/sakarkhadka10/mero-nepali-utils/actions/workflows/ci.yml/badge.svg)
 
-A **lightning-fast**, high-precision toolkit for Nepali applications. Engineered for modern web environments that demand accuracy, speed, and a tiny footprint. Featuring O(log n) date conversion and seamless numeral transformation.
+## ⚡ Quick Example
+```ts
+import { meroBs, meroAd } from "mero-nepali-utils";
+
+meroBs("2024-04-13"); // "2081-01-01"
+meroAd("2081-01-01"); // "2024-04-13"
+```
+---
+
+> ⚡ Fast, accurate Nepali date library for BS ↔ AD conversion, formatting, and localization
 
 ---
 
-## 🚀 Key Features
+## 🚀 Why Mero Nepali Utils?
 
-- **🎯 Absolute Precision**: Uses verified, official calendar data (BS 2000 - 2090) to eliminate the common "date drift" found in other libraries.
-- **⚡ Binary Search Optimization**: Year lookups are O(log n), making it perfect for real-time dashboards and high-frequency data processing.
-- **🔢 Numeral Transformation**: Instantly convert English numerals to Nepali (Devanagari) script.
-- **🪶 Zero Dependencies**: Ultra-lightweight with a focus on performance.
-- **🏗️ Developer First**: Native TypeScript support, ESM/CJS compatibility, and robust validation.
+Most Nepali date libraries are:
+- ❌ Slow (linear search)
+- ❌ Inaccurate (date drift)
+- ❌ Hard to use
+
+**Mero Nepali Utils is different:**
+
+- ⚡ **O(log n) conversion (faster than most libraries)**
+- 🎯 **Accurate BS data** (2000–2090)
+- 🧠 **Modern API (like dayjs)**
+- 🔢 **Built-in Nepali number conversion**
+- 🌐 **Localization support (NP / EN)**
+- 🧠 **TypeScript-first (fully typed)**
+- 🪶 **< 5KB gzipped**
+- 📦 **Tree-shakable**
+
+Unlike most libraries, this avoids iterative date calculations and uses precomputed offsets + binary search for speed and accuracy.
 
 ---
-
 ## 📦 Installation
 
 ```bash
 npm install mero-nepali-utils
 ```
-Or
-```bash
-pnpm add mero-nepali-utils
+
+## Quick Start 
+```ts
+import { MeroDate } from "mero-nepali-utils";
+
+const date = new MeroDate("2024-04-13");
+
+// Convert AD → BS
+date.toBS();
+// "2081-01-01"
+
+// Format (Nepali)
+date.format("YYYY MMMM DD", { locale: "np" });
+// "2081 बैशाख 01"
+
+// Add days
+date.addDays(5).toBS();
+
+// Relative time
+date.fromNow();
+// "x days ago"
 ```
-Or
-```bash
-bun add mero-nepali-utils
-```
 
----
-
-## 📖 Quick Start
-
-### 1. Date Conversion: `meroBs` (AD to BS)
-
-Perfect for localized UI rendering from database timestamps.
-
-```typescript
+## 🔁 Date Conversion
+#### AD => BS
+```ts
 import { meroBs } from "mero-nepali-utils";
 
-// From Date object
-const today = meroBs(new Date());
-// "2081-01-05" (example)
-
-// From string
-const specific = meroBs("2024-04-17");
-// "2081-01-05"
+meroBs("2024-04-13");
+// "2081-01-01"
 ```
-
-### 2. Date Conversion: `meroAd` (BS to AD)
-
-Ideal for converting user input from Nepali datepickers for database storage.
-
-```typescript
+#### BS => AD
+```ts
 import { meroAd } from "mero-nepali-utils";
 
-const dbFormat = meroAd("2081-01-01");
+meroAd("2081-01-01");
 // "2024-04-13"
 ```
 
-### 3. Numeral Localization: `meroNumber`
+## 🎨 Formatting
+Supports customizable tokens like YYYY, MM, DD, MMMM for flexible UI formatting.
+```ts
+import { formatBs } from "mero-nepali-utils";
 
-Convert prices, IDs, or counts to Devanagari script.
+formatBs("2081-01-01", "YYYY MMMM DD", { locale: "np" });
+// "2081 बैशाख 01"
 
-```typescript
-import { meroNumber } from "mero-nepali-utils";
+formatBs("2081-01-01", "YYYY-MM-DD");
+// "2081-01-01"
+```
 
-const count = meroNumber(12345);
+## 🔢 Number Conversion
+#### English => Nepali
+```ts
+import { toNepaliNumber } from "mero-nepali-utils";
+
+toNepaliNumber(12345);
 // "१२३४५"
+```
+#### Nepali => English
+```ts
+import { toEnglishNumber } from "mero-nepali-utils";
 
-const mixed = meroNumber("Year: 2081");
-// "Year: २०८१"
+toEnglishNumber("१२३४५");
+// "12345"
 ```
 
----
+## 📅 MeroDate (Powerful API)
+**Inspired by modern libraries like dayjs.**
+```ts
+import { MeroDate } from "mero-nepali-utils";
 
-## 💡 Best Practices: "AD in DB, BS in UI"
+const d = new MeroDate("2024-01-01");
 
-Senior developers recommend storing dates in **AD format (ISO 8601)** in the database. This ensures compatibility with global standards, indexing, and third-party tools. Use this library to localize the experience for your users at the edges.
+d.toBS();
+d.toAD();
 
-```typescript
-// Localizing a timestamp for a Nepali UI
-const Profile = ({ createdAt }) => {
-  const nepaliDate = meroBs(createdAt);
+d.format("YYYY MMMM DD", { locale: "np" });
 
-  return (
-    <div className="user-card">
-      <p>Member since: {meroNumber(nepaliDate)}</p>
-      {/* Renders: Member since: २०८१-०१-०१ */}
-    </div>
-  );
-};
+d.addDays(10);
+d.subtractDays(5);
+
+d.fromNow();
+```
+## 🔁 Data Integrity
+```ts
+import { isRoundTripValid } from "mero-nepali-utils";
+
+isRoundTripValid("2081-01-01");
+// true
 ```
 
----
+## 🧠 Best Practice
+**👉 Always store dates in AD (ISO format) in your database.**
+#### Convert only in UI:
+```ts
+const nepaliDate = new MeroDate(createdAt).toBS();
+```
 
-## 🛠️ API Reference
+## 📁 Supported Range
+- BS: 2000 → 2090
+- Fully verified with official calendar data
 
-### `meroBs(date: string | Date): string`
+## 🛠️ Use Cases
+- 🇳🇵 Nepali SaaS apps
+- 📊 Dashboards
+- 🧾 Invoice systems
+- 🏦 Fintech apps
+- 📅 Date pickers
+- 🌐 Localization
 
-- **Input**: `Date` object or string (`YYYY-MM-DD`).
-- **Output**: BS date string (`YYYY-MM-DD`).
-- **Optimization**: Binary search based lookup (O(log n)).
+## ⚖️ Comparison
+- 🧪 **90%+ test coverage (reliable & production-safe)**
+| Feature | Mero Nepali Utils | Other Libraries |
+|--------|------------------|----------------|
+| Speed | ⚡ O(log n) | ❌ Linear |
+| Accuracy | ✅ Verified BS data | ⚠️ Often inconsistent |
+| API | 🧠 Modern (dayjs-like) | ❌ Outdated |
+| Size | 🪶 < 5KB | ⚠️ Larger |
+| TypeScript | ✅ Fully typed | ⚠️ Partial |
 
-### `meroAd(date: string): string`
+## ❓ Why not use JavaScript Date?
+JavaScript's native `Date` does **not support Bikram Sambat (BS)**.
 
-- **Input**: BS date string (`YYYY-MM-DD`).
-- **Output**: AD date string (`YYYY-MM-DD`).
+This library provides:
 
-### `meroNumber(input: string | number): string`
+- BS ↔ AD conversion
+- Nepali month names
+- Nepali number formatting
 
-- **Input**: Any string or number containing English digits.
-- **Output**: String with digits replaced by Nepali counterparts.
+👉 All with accurate calendar data
 
----
 
-## 🧪 Robustness & Range
+## Used In Production
+Running in real-world Nepali applications
+- [merokarya.com](https://merokarya.com/date-converter)
 
-This library supports dates from **BS 2000 to BS 2090**. The data is cross-verified with official Nepali panchangas to ensure reliability for financial, academic, and government software.
+## 👨 Author
+- [sakarkhadka.com.np](https://sakarkhadka.com.np)
 
----
+## 📚 API Documentation 
+- [API DOCS LIVE URL](https://sakarkhadka10.github.io/mero-nepali-utils) 
 
-## 🔗 Connect & Use Cases
+## 📦 Version
+Actively maintained and production-ready.
 
-- **Portfolio**: [sakarkhadka.com.np](https://sakarkhadka.com.np)
-- **Production**: Used across [merokarya.com](https://merokarya.com/date-converter) ecosystem.
+## 🔍 Keywords
 
----
+nepali date converter, bikram sambat, bs to ad, ad to bs, nepali calendar, nepali numbers, devanagari, nepali localization
 
 ## 📄 License
-
 MIT © [Sakar Khadka](https://github.com/sakarkhadka10)

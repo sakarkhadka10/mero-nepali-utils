@@ -1,31 +1,70 @@
 import { bsMonthData } from "../data/bsMonthsData";
+import { SUPPORTED_AD_RANGE, SUPPORTED_BS_RANGE } from "./constants";
+import { InvalidDateValueError, OutOfRangeError } from "./errors";
 
-export function validateAd(y: number, m: number, d: number) {
-  if (y < 1943 || y > 2100) {
-    throw new Error("AD date out of supported range (1943–2100)");
+// ✅ Validate BS date
+export function validateBs(y: number, m: number, d: number) {
+  // year range
+  if (y < SUPPORTED_BS_RANGE.min || y > SUPPORTED_BS_RANGE.max) {
+    throw new OutOfRangeError(
+      `BS date out of supported range (${SUPPORTED_BS_RANGE.min}–${SUPPORTED_BS_RANGE.max})`
+    );
   }
 
+  // month range
   if (m < 1 || m > 12) {
-    throw new Error("Invalid AD month");
+    throw new InvalidDateValueError("Invalid BS month");
   }
 
-  if (d < 1 || d > 31) {
-    throw new Error("Invalid AD day");
+  const months = bsMonthData[y];
+
+  if (!months) {
+    throw new OutOfRangeError(`Missing BS data for year: ${y}`);
+  }
+
+  const maxDay = months[m - 1];
+
+  if (d < 1 || d > maxDay) {
+    throw new InvalidDateValueError("Invalid BS day");
   }
 }
 
-export function validateBs(y: number, m: number, d: number) {
-  if (!bsMonthData[y]) {
-    throw new Error("Unsupported BS year");
+// ✅ Validate AD date
+export function validateAd(
+  y: number,
+  m: number,
+  d: number,
+  strict = true
+) {
+  // year range
+  if (y < SUPPORTED_AD_RANGE.min || y > SUPPORTED_AD_RANGE.max) {
+    throw new OutOfRangeError(
+      `AD date out of supported range (${SUPPORTED_AD_RANGE.min}–${SUPPORTED_AD_RANGE.max})`
+    );
   }
 
+  // month
   if (m < 1 || m > 12) {
-    throw new Error("Invalid BS month");
+    throw new InvalidDateValueError("Invalid AD month");
   }
 
-  const maxDay = bsMonthData[y][m - 1];
+  // day
+  if (d < 1 || d > 31) {
+    throw new InvalidDateValueError("Invalid AD day");
+  }
 
-  if (d < 1 || d > maxDay) {
-    throw new Error("Invalid BS day");
+  // real calendar validation
+  const date = new Date(y, m - 1, d);
+
+  if (
+    date.getFullYear() !== y ||
+    date.getMonth() + 1 !== m ||
+    date.getDate() !== d
+  ) {
+    throw new InvalidDateValueError("Invalid real calendar date");
+  }
+
+  if (!strict) {
+    // future extension point
   }
 }

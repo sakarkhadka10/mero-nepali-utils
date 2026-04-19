@@ -1,9 +1,9 @@
 {
   "name": "mero-nepali-utils",
-  "version": "1.0.1",
-  "description": "A lightweight, zero-dependency toolkit for Nepali applications featuring accurate Bikram Sambat (BS) ↔ Gregorian (AD) date conversion and seamless English ↔ Nepali numeral transformation, built for performance and scalability.",
+  "version": "1.0.2",
+  "description": "Fast and accurate Nepali date library for Bikram Sambat (BS) ↔ Gregorian (AD) conversion, formatting, and localization.",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -15,30 +15,40 @@
   },
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --watch",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "docs": "typedoc",
+    "docs:deploy": "gh-pages -d docs",
     "prepublishOnly": "npm run build",
-    "test": "vitest"
+    "test": "vitest run --coverage"
   },
   "keywords": [
-  "nepali",
-  "bikram sambat",
-  "bs to ad",
-  "ad to bs",
-  "nepali date",
-  "date converter",
-  "devanagari",
-  "nepali numbers",
-  "numeral converter",
-  "nepali utils",
-  "unicode nepali",
-  "transliteration",
-  "nepali typing",
-  "mero karya"
-],
+    "nepali date",
+    "bikram sambat",
+    "bs to ad",
+    "ad to bs",
+    "nepali calendar",
+    "date converter",
+    "nepali date converter",
+    "bs ad converter",
+    "nepali unicode",
+    "nepali numbers",
+    "devanagari",
+    "nepali utils",
+    "date library",
+    "javascript date library",
+    "typescript date library",
+    "nepali localization",
+    "nepali i18n",
+    "mero karya"
+  ],
   "author": "Sakar",
   "license": "MIT",
   "engines": {
@@ -46,14 +56,18 @@
   },
   "homepage": "https://github.com/sakarkhadka10/mero-nepali-utils",
   "repository": {
-  "type": "git",
-  "url": "https://github.com/sakarkhadka10/mero-nepali-utils"
-},
+    "type": "git",
+    "url": "https://github.com/sakarkhadka10/mero-nepali-utils"
+  },
   "bugs": {
     "url": "https://github.com/sakarkhadka10/mero-nepali-utils/issues"
   },
   "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@vitest/coverage-v8": "^4.1.4",
+    "gh-pages": "^6.3.0",
     "tsup": "^8.5.1",
+    "typedoc": "^0.28.19",
     "typescript": "^6.0.3",
     "vitest": "^4.1.4"
   }
