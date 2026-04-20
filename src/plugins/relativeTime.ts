@@ -65,8 +65,16 @@ export const relativeTimePlugin: MeroDatePlugin = (
 
       if (year > 0) result = year === 1 ? loc.y : loc.yy(year);
       else if (month > 0) result = month === 1 ? loc.M : loc.MM(month);
-      else if (day > 0) result = day === 1 ? loc.d : loc.dd(day);
-      else result = loc.s;
+      else if (day > 0) {
+        if (day === 1) result = loc.d;
+        else if (day < 7) result = loc.dd(day);
+        else {
+          const weeks = Math.floor(day / 7);
+          result = weeks === 1 ? loc.w : loc.ww(weeks);
+        }
+      } else {
+        result = loc.s;
+      }
     }
 
     return isPast ? loc.past(result) : loc.future(result);

@@ -1,4 +1,8 @@
 import type { MeroDatePlugin } from "../core/MeroDate";
+import { getConfig } from "../core/config";
+import { meroBs } from "../core/package/meroBs";
+import { parseBs } from "../utils/parseBs";
+import { diffBs } from "../diff/bsDiff";
 
 type DiffUnit =
   | "milliseconds"
@@ -15,12 +19,12 @@ export const diffPlugin: MeroDatePlugin = (MeroDateClass) => {
     unit: DiffUnit = "days",
     float = false
   ) {
-    // Normalize input
     const other =
       input instanceof MeroDateClass
         ? input
         : new MeroDateClass(input);
 
+    const { calendar } = getConfig();
     const d1 = new Date(this.toAD());
     const d2 = new Date(other.toAD());
 
@@ -34,14 +38,37 @@ export const diffPlugin: MeroDatePlugin = (MeroDateClass) => {
       days: 1000 * 60 * 60 * 24,
     };
 
-    // Simple units
     if (unit in conversions) {
       const value =
         diffMs / conversions[unit as keyof typeof conversions];
       return float ? value : Math.floor(value);
     }
 
-    // Months (more accurate)
+    // =========================
+    // ✅ MONTHS / YEARS
+    // =========================
+    if (calendar === "bs") {
+      const b1 = parseBs(meroBs(d1));
+      const b2 = parseBs(meroBs(d2));
+
+      const isNegative = diffMs < 0;
+      const [start, end] = isNegative ? [b1, b2] : [b2, b1];
+      const diff = diffBs(end, start);
+
+      const totalMonths = diff.year * 12 + diff.month;
+      
+      if (unit === "months") {
+        const result = isNegative ? -totalMonths : totalMonths;
+        return float ? result + (diff.day / 30) : result;
+      }
+
+      if (unit === "years") {
+        const result = totalMonths / 12;
+        return float ? (isNegative ? -result : result) : Math.floor(isNegative ? -result : result);
+      }
+    }
+
+    // AD fallback
     if (unit === "months") {
       const years = d1.getFullYear() - d2.getFullYear();
       const months = d1.getMonth() - d2.getMonth();
@@ -49,17 +76,14 @@ export const diffPlugin: MeroDatePlugin = (MeroDateClass) => {
 
       return float
         ? total + (d1.getDate() - d2.getDate()) / 30
-        : total;
+        : Math.floor(total);
     }
 
-    // Years (based on months)
     if (unit === "years") {
-      const monthsDiff =
+      const totalMonths =
         (d1.getFullYear() - d2.getFullYear()) * 12 +
         (d1.getMonth() - d2.getMonth());
-
-      const value = monthsDiff / 12;
-
+      const value = totalMonths / 12;
       return float ? value : Math.floor(value);
     }
 

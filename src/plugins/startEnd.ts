@@ -1,17 +1,14 @@
 import type { MeroDatePlugin } from "../core/MeroDate";
-import { meroAd } from "../core/package/meroAd"; // 👈 your existing function
+import { meroAd } from "../core/package/meroAd";
+import { bsMonthData } from "../data/bsMonthsData";
+import { parseBs } from "../utils/parseBs";
 
 type Unit = "day" | "month" | "year";
-
-function parseBS(bs: string) {
-  const [y, m, d] = bs.split("-").map(Number);
-  return { y, m, d };
-}
 
 export const startEndPlugin: MeroDatePlugin = (MeroDateClass) => {
   MeroDateClass.prototype.startOf = function (unit: Unit) {
     const bs = this.toBS();
-    const { y, m } = parseBS(bs);
+    const { y, m } = parseBs(bs);
 
     let newBs = bs;
 
@@ -34,7 +31,7 @@ export const startEndPlugin: MeroDatePlugin = (MeroDateClass) => {
 
   MeroDateClass.prototype.endOf = function (unit: Unit) {
     const bs = this.toBS();
-    const { y, m } = parseBS(bs);
+    const { y, m } = parseBs(bs);
 
     let newBs = bs;
 
@@ -44,37 +41,15 @@ export const startEndPlugin: MeroDatePlugin = (MeroDateClass) => {
         break;
 
       case "month": {
-        // 🔥 find last day of BS month
-        let day = 32;
-
-        while (day > 28) {
-          const test = `${y}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-          try {
-            meroAd(test);
-            newBs = test;
-            break;
-          } catch {
-            day--;
-          }
-        }
+        const lastDay = bsMonthData[y][m - 1];
+        newBs = `${y}-${String(m).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
         break;
       }
 
       case "year": {
-        // BS year has 12 months
-        let day = 32;
         const lastMonth = 12;
-
-        while (day > 28) {
-          const test = `${y}-${lastMonth}-${String(day).padStart(2, "0")}`;
-          try {
-            meroAd(test);
-            newBs = test;
-            break;
-          } catch {
-            day--;
-          }
-        }
+        const lastDay = bsMonthData[y][lastMonth - 1];
+        newBs = `${y}-${String(lastMonth).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
         break;
       }
     }
