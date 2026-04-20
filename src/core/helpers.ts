@@ -1,4 +1,4 @@
-import { bsYearStartDays } from "../utils/bsYearStartDate";
+import { bsYearStartDays } from "../utils/bsYearStartDays";
 import { InvalidDateFormatError, InvalidDateValueError, OutOfRangeError } from "./errors";
 
 //  Strict parser (production-grade)

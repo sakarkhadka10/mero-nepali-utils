@@ -36,5 +36,9 @@ declare module "../core/MeroDate" {
 
     startOf(unit: PublicUnit): MeroDateClass;
     endOf(unit: PublicUnit): MeroDateClass;
+
+    fromNow(): string;
+    toNow(): string;
+    from(input: string | Date): string;
   }
 }

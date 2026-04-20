@@ -1,7 +1,7 @@
 import { parse, format } from "../helpers";
 import { validateBs } from "../validate";
 import { bsMonthData } from "../../data/bsMonthsData";
-import { bsYearStartDays } from "../../utils/bsYearStartDate";
+import { bsYearStartDays } from "../../utils/bsYearStartDays";
 import { OutOfRangeError } from "../errors";
 
 const BASE_AD = Date.UTC(1943, 3, 14) / 86400000;

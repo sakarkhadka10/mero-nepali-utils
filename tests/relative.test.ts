@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { fromNow } from "../src/relative/fromNow";
+import { MeroDate } from "../src/core/MeroDate";
 
 describe("fromNow", () => {
   const mockNow = new Date("2024-01-15");
@@ -7,6 +8,7 @@ describe("fromNow", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(mockNow);
+    MeroDate.locale("en");
   });
 
   afterEach(() => {

@@ -1,6 +1,6 @@
 {
   "name": "mero-nepali-utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Fast and accurate Nepali date library for Bikram Sambat (BS) ↔ Gregorian (AD) conversion, formatting, and localization.",
   "type": "module",
   "main": "dist/index.cjs",

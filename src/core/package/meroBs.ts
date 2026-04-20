@@ -1,7 +1,7 @@
 import { parse, format, toDays, findBsYear } from "../helpers";
 import { validateAd } from "../validate";
 import { bsMonthData } from "../../data/bsMonthsData";
-import { bsYearStartDays } from "../../utils/bsYearStartDate";
+import { bsYearStartDays } from "../../utils/bsYearStartDays";
 
 const BASE_AD = toDays(1943, 4, 14);
 

@@ -14,10 +14,16 @@ for (const year of years) {
   total += bsMonthData[year].reduce((a, b) => a + b, 0);
 }
 
-const content = `export const bsYearStartDays = ${JSON.stringify(result, null, 2)} as const;\n`;
+const content = `export const rawBsYearStartDays = ${JSON.stringify(result, null, 2)} as const;\n
+// ✅ type-safe map for runtime usage
+export const bsYearStartDays: Record<number, number> =
+  rawBsYearStartDays as unknown as Record<number, number>;
+
+// ✅ optional: export type for advanced usage
+export type BsYear = keyof typeof rawBsYearStartDays;\n`;
 
 writeFileSync(
-  "src/utils/bsYearStartDays.generated.ts",
+  "src/utils/bsYearStartDays.ts",
   content
 );
 

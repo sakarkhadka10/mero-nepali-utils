@@ -2,7 +2,7 @@ import { meroBs } from "./package/meroBs";
 import { formatBs } from "../format/formatter";
 import { toNepaliNumber } from "../number/toNepali";
 import { fromNow } from "../relative/fromNow";
-import { getConfig, setLocale } from "./config";
+import { getConfig, setLocale, setCalendar } from "./config";
 
 /**
  * Core Class (internal)
@@ -120,9 +120,11 @@ type MeroDateType = typeof MeroDateClass & {
 export const MeroDate = Object.assign(create, MeroDateClass, {
   extend,
   locale: setLocale,
+  calendar:setCalendar
 }) as MeroDateType & {
   extend: (plugin: MeroDatePlugin) => void;
   locale: (locale: "np" | "en") => void;
+  calendar: (calendar: "bs" | "ad") => void;
 };
 
 /**

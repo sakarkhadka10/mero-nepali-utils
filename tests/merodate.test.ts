@@ -65,6 +65,7 @@ describe("MeroDate Class", () => {
 
   describe("fromNow()", () => {
     it("should return relative time", () => {
+      MeroDate.locale("en");
       const pastDate = MeroDate("2023-01-01");
       expect(pastDate.fromNow()).toContain("ago");
 
@@ -84,6 +85,7 @@ describe("MeroDate Class", () => {
 
   describe("toNepaliNumber()", () => {
     it("should convert date to Nepali numbers when locale is np", () => {
+      MeroDate.locale("np");
       const date = MeroDate("2024-01-01");
       expect(date.toNepaliNumber()).toBe("२०८०-०९-१६");
     });
