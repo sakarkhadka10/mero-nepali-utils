@@ -12,7 +12,8 @@ export function fromNow(input: string | Date): string {
   if (diffDays > 0) {
     if (diffDays === 1) return "yesterday";
     if (diffDays < 7) return `${diffDays} days ago`;
-    return `${Math.floor(diffDays / 7)} weeks ago`;
+    const weeks = Math.floor(diffDays / 7);
+    return `${weeks} week${weeks === 1 ? '' : 's'} ago`;
   }
 
   // 🟣 FUTURE
@@ -20,5 +21,6 @@ export function fromNow(input: string | Date): string {
 
   if (futureDays === 1) return "tomorrow";
   if (futureDays < 7) return `in ${futureDays} days`;
-  return `in ${Math.floor(futureDays / 7)} weeks`;
+  const futureWeeks = Math.floor(futureDays / 7);
+  return `in ${futureWeeks} week${futureWeeks === 1 ? '' : 's'}`;
 }

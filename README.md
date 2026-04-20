@@ -1,4 +1,5 @@
 # 🇳🇵 Mero Nepali Utils
+![Mero Nepali Utils Preview](https://www.merokarya.com/mero-nepali-utils-image.png)
 
 [![npm version](https://img.shields.io/npm/v/mero-nepali-utils.svg)](https://www.npmjs.com/package/mero-nepali-utils)
 [![npm downloads](https://img.shields.io/npm/dm/mero-nepali-utils.svg)](https://www.npmjs.com/package/mero-nepali-utils)
@@ -39,6 +40,15 @@ Most Nepali date libraries are:
 
 Unlike most libraries, this avoids iterative date calculations and uses precomputed offsets + binary search for speed and accuracy.
 
+## 💡 Why this exists
+Handling Nepali dates in JavaScript has always been painful.
+This library was built to provide:
+- accurate conversion
+- clean developer experience
+- modern API
+
+without hacks or inconsistencies.
+
 ---
 ## 📦 Installation
 
@@ -50,22 +60,20 @@ npm install mero-nepali-utils
 ```ts
 import { MeroDate } from "mero-nepali-utils";
 
-const date = new MeroDate("2024-04-13");
+const date = MeroDate("2024-04-13");
 
-// Convert AD → BS
-date.toBS();
-// "2081-01-01"
+// Convert
+date.toBS(); // "2081-01-01"
 
-// Format (Nepali)
+// Format
 date.format("YYYY MMMM DD", { locale: "np" });
 // "2081 बैशाख 01"
 
-// Add days
+// Add / subtract
 date.addDays(5).toBS();
 
-// Relative time
+// Relative
 date.fromNow();
-// "x days ago"
 ```
 
 ## 🔁 Date Conversion
@@ -117,7 +125,7 @@ toEnglishNumber("१२३४५");
 ```ts
 import { MeroDate } from "mero-nepali-utils";
 
-const d = new MeroDate("2024-01-01");
+const d = MeroDate("2024-01-01");
 
 d.toBS();
 d.toAD();
@@ -128,6 +136,32 @@ d.addDays(10);
 d.subtractDays(5);
 
 d.fromNow();
+```
+
+## Plugins:
+```ts
+import { MeroDate } from "mero-nepali-utils";
+import {
+  diffPlugin,
+  isSamePlugin,
+  isBetweenPlugin,
+  startEndPlugin,
+} from "mero-nepali-utils";
+
+MeroDate.extend(diffPlugin);
+MeroDate.extend(isSamePlugin);
+MeroDate.extend(isBetweenPlugin);
+MeroDate.extend(startEndPlugin);
+
+const d = MeroDate("2024-01-05");
+
+d.diff("2024-01-01", "days");
+d.isSame("2024-01-05", "day");
+
+d.isBetween("2024-01-01", "2024-01-10");
+
+d.startOf("month");
+d.endOf("month");
 ```
 ## 🔁 Data Integrity
 ```ts
@@ -141,7 +175,7 @@ isRoundTripValid("2081-01-01");
 **👉 Always store dates in AD (ISO format) in your database.**
 #### Convert only in UI:
 ```ts
-const nepaliDate = new MeroDate(createdAt).toBS();
+const nepaliDate = MeroDate(createdAt).toBS();
 ```
 
 ## 📁 Supported Range
@@ -157,16 +191,16 @@ const nepaliDate = new MeroDate(createdAt).toBS();
 - 🌐 Localization
 
 ## ⚖️ Comparison
-- 🧪 **90%+ test coverage (reliable & production-safe)**
-| Feature | Mero Nepali Utils | Other Libraries |
-|--------|------------------|----------------|
-| Speed | ⚡ O(log n) | ❌ Linear |
-| Accuracy | ✅ Verified BS data | ⚠️ Often inconsistent |
-| API | 🧠 Modern (dayjs-like) | ❌ Outdated |
-| Size | 🪶 < 5KB | ⚠️ Larger |
-| TypeScript | ✅ Fully typed | ⚠️ Partial |
+| Feature    | Mero Nepali Utils | Others          |
+| ---------- | ----------------- | --------------- |
+| Speed      | ⚡ O(log n)        | ❌ Linear        |
+| Accuracy   | ✅ Verified        | ⚠️ Inconsistent |
+| API        | 🧠 Modern         | ❌ Outdated      |
+| Size       | 🪶 < 5KB          | ⚠️ Larger       |
+| TypeScript | ✅ Full            | ⚠️ Partial      |
 
-## ❓ Why not use JavaScript Date?
+
+## Why not use JavaScript Date?
 JavaScript's native `Date` does **not support Bikram Sambat (BS)**.
 
 This library provides:
@@ -192,8 +226,7 @@ Running in real-world Nepali applications
 Actively maintained and production-ready.
 
 ## 🔍 Keywords
-
-nepali date converter, bikram sambat, bs to ad, ad to bs, nepali calendar, nepali numbers, devanagari, nepali localization
+nepali date, nepali date converter, bikram sambat, bs to ad converter, ad to bs converter, nepali calendar js, nepali date javascript, nepali date npm, nepali date library, bs calendar conversion, nepali localization, devanagari numbers, nepali number converter, nepali date formatter
 
 ## 📄 License
 MIT © [Sakar Khadka](https://github.com/sakarkhadka10)

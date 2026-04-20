@@ -133,3 +133,6 @@ temp/
 
 docs/.next/
 docs/out/
+
+# --------------------
+tests
