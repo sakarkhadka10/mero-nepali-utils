@@ -1,5 +1,5 @@
 import type { MeroDatePlugin } from "../core/MeroDate";
-import { normalizeUnit, PublicUnit, InternalUnit } from "../utils/normalizeUnit";
+import { normalizeUnit, PublicUnit } from "../utils/normalizeUnit";
 
 type Unit = PublicUnit;
 type Inclusivity = "()" | "[]" | "(]" | "[)";
