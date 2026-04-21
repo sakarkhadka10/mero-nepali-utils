@@ -5,5 +5,5 @@ export const SUPPORTED_BS_RANGE = {
 
 export const SUPPORTED_AD_RANGE = {
   min: 1943,
-  max: 2100,
+  max: 2033,
 } as const;

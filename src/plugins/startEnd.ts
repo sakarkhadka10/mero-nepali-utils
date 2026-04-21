@@ -1,59 +1,43 @@
-import type { MeroDatePlugin } from "../core/MeroDate";
+import { MeroDatePlugin } from "../core/MeroDate";
 import { meroAd } from "../core/package/meroAd";
-import { bsMonthData } from "../data/bsMonthsData";
 import { parseBs } from "../utils/parseBs";
+import { bsMonthData } from "../data/bsMonthsData";
 
-type Unit = "day" | "month" | "year";
-
-export const startEndPlugin: MeroDatePlugin = (MeroDateClass) => {
-  MeroDateClass.prototype.startOf = function (unit: Unit) {
+export const startEndPlugin: MeroDatePlugin = (cls) => {
+  cls.prototype.startOf = function (unit) {
     const bs = this.toBS();
     const { y, m } = parseBs(bs);
 
     let newBs = bs;
 
-    switch (unit) {
-      case "day":
-        newBs = bs;
-        break;
-
-      case "month":
-        newBs = `${y}-${String(m).padStart(2, "0")}-01`;
-        break;
-
-      case "year":
-        newBs = `${y}-01-01`;
-        break;
+    if (unit === "month") {
+      newBs = `${y}-${String(m).padStart(2, "0")}-01`;
     }
 
-    return new MeroDateClass(meroAd(newBs));
+    if (unit === "year") {
+      newBs = `${y}-01-01`;
+    }
+
+    return new cls(meroAd(newBs));
   };
 
-  MeroDateClass.prototype.endOf = function (unit: Unit) {
+  cls.prototype.endOf = function (unit) {
     const bs = this.toBS();
     const { y, m } = parseBs(bs);
 
     let newBs = bs;
 
-    switch (unit) {
-      case "day":
-        newBs = bs;
-        break;
-
-      case "month": {
-        const lastDay = bsMonthData[y][m - 1];
-        newBs = `${y}-${String(m).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
-        break;
-      }
-
-      case "year": {
-        const lastMonth = 12;
-        const lastDay = bsMonthData[y][lastMonth - 1];
-        newBs = `${y}-${String(lastMonth).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
-        break;
-      }
+    if (unit === "month") {
+      const lastDay = bsMonthData[y][m - 1];
+      newBs = `${y}-${String(m).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
     }
 
-    return new MeroDateClass(meroAd(newBs));
+    if (unit === "year") {
+      const lastMonth = 12;
+      const lastDay = bsMonthData[y][lastMonth - 1];
+      newBs = `${y}-${lastMonth}-${lastDay}`;
+    }
+
+    return new cls(meroAd(newBs));
   };
 };

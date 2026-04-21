@@ -27,7 +27,7 @@ export const relativeTimeLocales: Record<string, RelativeTimeLocale> = {
     future: (str: string) => `in ${str}`,
     past: (str: string) => `${str} ago`,
 
-    s: "just now",
+    s: "a few seconds",
     m: "a minute",
     mm: (n: number) => `${n} minutes`,
 
@@ -51,7 +51,7 @@ export const relativeTimeLocales: Record<string, RelativeTimeLocale> = {
     future: (str: string) => `${str} पछि`,
     past: (str: string) => `${str} अघि`,
 
-    s: "अहिले",
+    s: "केही सेकेन्ड",
     m: "१ मिनेट",
     mm: (n: number) => `${n} मिनेट`,
 

@@ -11,12 +11,11 @@
 ## ⚡ Quick Example
 
 ```ts
-import { meroBs, meroAd } from "mero-nepali-utils";
-
-meroBs("2024-04-13"); // "2081-01-01"
-meroAd("2081-01-01"); // "2024-04-13"
+import { MeroDate } from "mero-nepali-utils"; 
+const d = MeroDate("2024-04-13"); 
+d.toBS(); // "2081-01-01" 
+d.format("YYYY MMMM DD"); // "2081 बैशाख 01"
 ```
-
 ---
 
 > ⚡ Fast, accurate Nepali date library for BS ↔ AD conversion, formatting, and localization
@@ -63,6 +62,20 @@ without hacks or inconsistencies.
 npm install mero-nepali-utils
 ```
 
+## Core Concepts (Important)
+#### Always store dates in AD
+```ts
+// GOOD 
+ createdAt = "2024-04-13"; 
+// Convert only in UI 
+ MeroDate(createdAt).toBS();
+```
+#### Don’t store BS in database
+- Causes bugs
+- Hard to integrate with APIs
+- Not standard
+
+
 ## Quick Start
 
 ```ts
@@ -104,116 +117,129 @@ meroAd("2081-01-01");
 // "2024-04-13"
 ```
 
-## 🎨 Formatting
+## Formatting
 
 Supports customizable tokens like YYYY, YY, MMMM, MM, M, DD, D for flexible UI formatting.
 
 ```ts
-import { formatBs } from "mero-nepali-utils";
+const d = MeroDate("2024-04-13");
 
-formatBs("2081-01-01", "YYYY MMMM DD", { locale: "np" });
-// "2081 बैशाख 01"
+d.format("YYYY-MM-DD") // 2081-01-01
+d.format("DD/MM/YYYY") // 01/01/2081
+d.format("DD MMMM YYYY") // 01 बैशाख 2081
+```
+## Locale
+```ts
+MeroDate.locale("np");
+d.format("MMMM"); // बैशाख
 
-formatBs("2081-01-01", "DD/MM/YY");
-// "01/01/81"
+MeroDate.locale("en");
+d.format("MMMM"); // Baishakh
 ```
 
-## 🔢 Number Conversion
-
-#### English => Nepali
-
+## Number Conversion
 ```ts
-import { toNepaliNumber } from "mero-nepali-utils";
-
-toNepaliNumber(12345);
-// "१२३४५"
-```
-
-#### Nepali => English
-
-```ts
-import { toEnglishNumber } from "mero-nepali-utils";
-
-toEnglishNumber("१२३४५");
-// "12345"
+import { toNepaliNumber, toEnglishNumber } from "mero-nepali-utils";
+toNepaliNumber(123); // १२३
+toEnglishNumber("१२३"); // 123
 ```
 
 ## 📅 MeroDate (Powerful API)
-
 **Inspired by modern libraries like dayjs.**
 
 ```ts
-import { MeroDate } from "mero-nepali-utils";
-
 const d = MeroDate("2024-01-01");
 
-d.toBS();
-d.toAD();
+d.toBS(); // 2080-09-16
+d.toAD(); // 2024-01-01
 
-d.format("YYYY MMMM DD", { locale: "np" });
+d.addDays(5).toAD(); // 2024-01-06
+d.subtractDays(5).toAD(); // 2023-12-27
 
-d.addDays(10);
-d.subtractDays(5);
+d.clone(); // new instance
+d.valueOf(); // timestamp
+```
+## React Usage (VERY IMPORTANT)
+```ts
+//this will crash because React cannot render objects. 
+<p>{d.addDays(5)}</p>
 
-d.fromNow();
+// Correct Way
+<p>{d.addDays(5).toBS()}</p> 
+<p>{d.format("DD MMM YYYY")}</p>
 ```
 
-## Plugins:
+## 🔌 Plugins (Auto-enabled)
+No setup needed — everything works out of the box.
 
+- diff()
 ```ts
-import { MeroDate } from "mero-nepali-utils";
-import {
-  diffPlugin,
-  isSamePlugin,
-  isBetweenPlugin,
-  startEndPlugin,
-  relativeTimePlugin,
-} from "mero-nepali-utils";
+d.diff("2024-01-01", "days"); // 4
+d.diff("2024-01-01", "months"); // 0
+```
 
-MeroDate.extend(diffPlugin);
-MeroDate.extend(isSamePlugin);
-MeroDate.extend(isBetweenPlugin);
-MeroDate.extend(startEndPlugin);
-MeroDate.extend(relativeTimePlugin);
+- isSame()
+```ts
+d.isSame("2024-01-01"); // true
+d.isSame("2024-01-01", "month"); // true
+```
 
-const d = MeroDate("2024-01-05");
+- isBetween()
+```ts
+d.isBetween("2024-01-01", "2024-01-10"); // true
 
-// ✅ Calendar-aware logic (works perfectly for both BS & AD)
-d.diff("2024-01-01", "days");
-d.isSame("2024-01-05", "day");
-d.fromNow(); // Now supports weeks and localized strings
-d.startOf("month");
-d.endOf("month");
+// inclusive
+d.isBetween("2024-01-01", "2024-01-10", "[]");
+```
+
+-isToday()
+```ts
+MeroDate().isToday(); // true
+```
+
+- Relative Time
+```ts
+d.fromNow(); // "5 days ago" 
+d.toNow(); // "in 5 days" 
+d.from("2024-01-01");
+```
+
+-startOf / endOf
+```ts
+d.startOf("month").toBS(); // start of month
+d.endOf("month").toBS(); // end of month
+
+d.startOf("year").toBS(); 
+d.endOf("year").toBS();
 ```
 
 ## 🔁 Data Integrity
-
 ```ts
 import { isRoundTripValid } from "mero-nepali-utils";
-
-isRoundTripValid("2081-01-01");
-// true
+isRoundTripValid("2081-01-01"); //true
 ```
+- No Drift
+- No Mutation
+- Fully deterministic
 
-## 🧠 Best Practice
-
-**👉 Always store dates in AD (ISO format) in your database.**
-
-#### Convert only in UI:
-
-```ts
-const nepaliDate = MeroDate(createdAt).toBS();
-```
+## How It Works
+- Uses precomputed BS calendar data
+- Converts using day offsets (no loops)
+- Binary search for fast lookup
+👉 Result:
+- Fast
+- Accurate
+- Predictable
 
 ## 📁 Supported Range
-
 - BS: 2000 → 2090
-- Fully verified with official calendar data
+- AD: 1943 → 2033
 
 ## 🛠️ Use Cases
 
 - 🇳🇵 Nepali SaaS apps
 - 📊 Dashboards
+- 🧾 Billing Systems
 - 🧾 Invoice systems
 - 🏦 Fintech apps
 - 📅 Date pickers
@@ -223,14 +249,24 @@ const nepaliDate = MeroDate(createdAt).toBS();
 
 | Feature    | Mero Nepali Utils | Others          |
 | ---------- | ----------------- | --------------- |
-| Speed      | ⚡ O(log n)       | ❌ Linear       |
-| Accuracy   | ✅ Verified       | ⚠️ Inconsistent |
+| Speed      | ⚡ O(log n)        | ❌ Linear       |
+| Accuracy   | ✅ Verified       | ⚠️ Drift |
 | API        | 🧠 Modern         | ❌ Outdated     |
-| Size       | 🪶 < 5KB          | ⚠️ Larger       |
+| Size       | 🪶 Small          | ⚠️ Bigger       |
 | TypeScript | ✅ Full           | ⚠️ Partial      |
 
-## Why not use JavaScript Date?
+## Advanced: Custom Plugin
+```ts
+const myPlugin = (cls) => { 
+  cls.prototype.hello = function () {
+     return "Hello"; 
+   }; 
+ }; 
+ MeroDate.extend(myPlugin); 
+ MeroDate().hello(); // Hello
+```
 
+## Why not use JavaScript Date?
 JavaScript's native `Date` does **not support Bikram Sambat (BS)**.
 
 This library provides:

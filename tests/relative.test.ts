@@ -41,4 +41,19 @@ describe("fromNow", () => {
     const pastDate = new Date("2024-01-10");
     expect(fromNow(pastDate)).toBe("5 days ago");
   });
+
+  it("should handle AD mode for longer periods", () => {
+    MeroDate.calendar("ad");
+    
+    // Weeks
+    expect(fromNow("2023-12-25")).toBe("3 weeks ago");
+    
+    // Months
+    expect(fromNow("2023-10-15")).toBe("3 months ago");
+    
+    // Years
+    expect(fromNow("2020-01-15")).toBe("4 years ago");
+
+    MeroDate.calendar("bs"); // Reset
+  });
 });

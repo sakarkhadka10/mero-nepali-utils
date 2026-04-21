@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { MeroDate, MeroDateClass } from "../src";
+import { MeroDate, MeroDateClass } from "../src/core/MeroDate";
 
 describe("MeroDate Factory Function", () => {
   it("should create MeroDate instance when called as function", () => {

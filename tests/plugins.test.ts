@@ -5,7 +5,6 @@ import { diffPlugin } from "../src/plugins/diff";
 import { isSamePlugin } from "../src/plugins/isSame";
 import { isBetweenPlugin } from "../src/plugins/isBetween";
 import { startEndPlugin } from "../src/plugins/startEnd";
-import "../src/types/plugins.d";
 
 describe("Plugins", () => {
   beforeAll(() => {
@@ -89,7 +88,15 @@ describe("Plugins", () => {
   it("should calculate year difference with float false", () => {
     const date1 = MeroDate("2024-01-01");
     const date2 = MeroDate("2025-06-01");
-    expect(date1.diff(date2, "years", false)).toBe(-2);
+    expect(date1.diff(date2, "years", false)).toBe(-1);
+  });
+
+  it("should calculate difference with float true", () => {
+    const date1 = MeroDate("2024-01-01");
+    const date2 = MeroDate("2024-06-01");
+    const diff = date1.diff(date2, "years", true);
+    expect(diff).toBeLessThan(0);
+    expect(diff).toBeGreaterThan(-1);
   });
 
   it("should add isBetween method", () => {

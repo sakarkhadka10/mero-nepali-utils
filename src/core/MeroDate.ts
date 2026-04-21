@@ -5,15 +5,41 @@ import { fromNow } from "../relative/fromNow";
 import { getConfig, setLocale, setCalendar } from "./config";
 
 /**
- * Core Class (internal)
+ * Types
  */
-class MeroDateClass {
+export type LocaleType = "np" | "en";
+export type CalendarType = "bs" | "ad";
+
+export type Unit =
+  | "day"
+  | "month"
+  | "year"
+  | "days"
+  | "months"
+  | "years";
+
+export type DiffUnit =
+  | "milliseconds"
+  | "seconds"
+  | "minutes"
+  | "hours"
+  | "days"
+  | "months"
+  | "years";
+
+export type Inclusivity = "()" | "[]" | "(]" | "[)";
+export type StartEndUnit = "day" | "month" | "year";
+
+/**
+ * Core Class
+ */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export class MeroDateClass {
   private ad: string;
   private bs?: string;
 
   constructor(date: string | Date = new Date()) {
     if (date instanceof Date) {
-      // Local date (avoid timezone issues)
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, "0");
       const d = String(date.getDate()).padStart(2, "0");
@@ -24,9 +50,7 @@ class MeroDateClass {
   }
 
   toBS(): string {
-    if (!this.bs) {
-      this.bs = meroBs(this.ad);
-    }
+    if (!this.bs) this.bs = meroBs(this.ad);
     return this.bs;
   }
 
@@ -34,100 +58,126 @@ class MeroDateClass {
     return this.ad;
   }
 
-  format(pattern: string, opts?: { locale?: "np" | "en" }) {
-    const globalLocale = getConfig().locale;
-  const locale = opts?.locale ?? globalLocale;
-
-    return formatBs(this.toBS(), pattern, {locale});
+  format(pattern: string, opts?: { locale?: LocaleType }): string {
+    const locale = opts?.locale ?? getConfig().locale;
+    return formatBs(this.toBS(), pattern, { locale });
   }
 
   toNepaliNumber(): string {
-    const {locale} = getConfig();
+    const { locale } = getConfig();
     const bs = this.toBS();
-     return locale === "np" ? toNepaliNumber(bs) : bs;
+    return locale === "np" ? toNepaliNumber(bs) : bs;
   }
 
-  addDays(days: number) {
-    const date = new Date(this.ad);
-    date.setDate(date.getDate() + days);
-    return new MeroDateClass(date);
+  addDays(days: number): MeroDateClass {
+    const d = new Date(this.ad);
+    d.setDate(d.getDate() + days);
+    return new MeroDateClass(d);
   }
 
-  subtractDays(days: number) {
+  subtractDays(days: number): MeroDateClass {
     return this.addDays(-days);
   }
 
-  fromNow() {
+  fromNow(): string {
     return fromNow(this.ad);
   }
 
-  clone() {
+  clone(): MeroDateClass {
     return new MeroDateClass(this.ad);
   }
 
-  valueOf() {
+  valueOf(): number {
     return new Date(this.ad).getTime();
   }
+
+  toString(): string {
+    return this.toBS();
+  }
+
+  toJSON(): string {
+    return this.toAD();
+  }
+  
+  [Symbol.toPrimitive](hint: string) {
+  if (hint === "number") {
+    return this.valueOf();
+  }
+  return this.toString();
+}
 }
 
 /**
- * Factory creator
+ * Plugin method declarations (Interface Merging)
  */
-const create = (date?: string | Date) =>
-  new MeroDateClass(date ?? new Date());
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export interface MeroDateClass {
+  diff(
+    input: string | Date | MeroDateClass,
+    unit?: DiffUnit,
+    float?: boolean
+  ): number;
+
+  isSame(input: string | Date | MeroDateClass, unit?: Unit): boolean;
+
+  isBetween(
+    a: string | Date | MeroDateClass,
+    b: string | Date | MeroDateClass,
+    unit?: Unit | Inclusivity,
+    inc?: Inclusivity
+  ): boolean;
+
+  isToday(): boolean;
+
+  startOf(unit: StartEndUnit): MeroDateClass;
+  endOf(unit: StartEndUnit): MeroDateClass;
+
+  toNow(): string;
+  from(input: string | Date): string;
+}
 
 /**
- * Constructor type (fixes circular TS issue)
- */
-type MeroDateClassConstructor = {
-  new (date?: string | Date): MeroDateClass;
-  prototype: MeroDateClass;
-};
-
-/**
- * Plugin type
+ * Plugin system
  */
 export type MeroDatePlugin = (
-  MeroDateClass: MeroDateClassConstructor,
+  cls: typeof MeroDateClass,
   factory: (date?: string | Date) => MeroDateClass
 ) => void;
 
-/**
- * Installed plugins registry
- */
-const installedPlugins = new Set<MeroDatePlugin>();
+const installed = new Set<MeroDatePlugin>();
 
-/**
- * Extend method
- */
-function extend(plugin: MeroDatePlugin) {
-  if (installedPlugins.has(plugin)) return;
+const create = (date?: string | Date) =>
+  new MeroDateClass(date ?? new Date());
 
-  plugin(MeroDateClass as MeroDateClassConstructor, create);
-  installedPlugins.add(plugin);
+export function extend(plugin: MeroDatePlugin) {
+  if (!plugin || typeof plugin !== "function") return;
+  if (installed.has(plugin)) return;
+  plugin(MeroDateClass, create);
+  installed.add(plugin);
 }
 
 /**
- * Callable + constructable type
- */
-type MeroDateType = typeof MeroDateClass & {
-  (date?: string | Date): MeroDateClass;
-};
-
-/**
- * Final export (dayjs-style API)
+ * Export
  */
 export const MeroDate = Object.assign(create, MeroDateClass, {
   extend,
   locale: setLocale,
-  calendar:setCalendar
-}) as MeroDateType & {
-  extend: (plugin: MeroDatePlugin) => void;
-  locale: (locale: "np" | "en") => void;
-  calendar: (calendar: "bs" | "ad") => void;
-};
+  calendar: setCalendar,
+});
 
 /**
- * Optional export for advanced usage / plugin typing
+ * 🔥 AUTO REGISTER PLUGINS (CRITICAL)
  */
-export { MeroDateClass };
+import { diffPlugin } from "../plugins/diff";
+import { isSamePlugin } from "../plugins/isSame";
+import { isBetweenPlugin } from "../plugins/isBetween";
+import { startEndPlugin } from "../plugins/startEnd";
+import { relativeTimePlugin } from "../plugins/relativeTime";
+import { isTodayPlugin } from "../plugins/isToday";
+
+extend(diffPlugin);
+extend(isSamePlugin);
+extend(isBetweenPlugin);
+extend(startEndPlugin);
+extend(relativeTimePlugin);
+extend(isTodayPlugin);
